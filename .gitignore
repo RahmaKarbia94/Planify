@@ -1,0 +1,4 @@
+node_modules/
+.env
+planify-backend/node_modules/
+planify-web/node_modules/
