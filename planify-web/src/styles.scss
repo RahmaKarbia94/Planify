@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+:root {
+  --primary: #4FD1C5;
+  --primary-dark: #38B2AC;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --mint-gradient: linear-gradient(135deg, #a7f3d0 0%, #4fd1c5 60%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
