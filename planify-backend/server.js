@@ -1,8 +1,12 @@
+
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
+
+// Define Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // Initialize Database Connection
 connectDB();
