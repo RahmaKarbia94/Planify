@@ -8,6 +8,8 @@ const app = express();
 // Define Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 
+app.use('/api/projects', require('./routes/projectRoutes'));
+app.use('/api/tasks', require('./routes/taskRoutes'));
 // Initialize Database Connection
 connectDB();
 
