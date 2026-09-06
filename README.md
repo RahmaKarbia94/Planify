@@ -423,9 +423,6 @@ MIT License — See LICENSE file for details
 
 - 💬 **GitHub Issues** — Bug reports & feature requests
 - 📧 **Email** — karbia.rahma94@gmail.com
-- 🔗 **LinkedIn** — [linkedin.com/in/rahmakarbia](https://linkedin.com/in/rahmakarbia)
-- 🐦 **Twitter** — [@RahmaKarbia](https://twitter.com/rahmakarbia)
-
 ---
 
 ## 🎓 Learning Resources
