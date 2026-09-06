@@ -1,9 +1,19 @@
-
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
 
 const app = express();
+
+// Must be registered before any app.use('/api', ...) routes
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}));
+
+app.use(express.json());
+
+
+const connectDB = require('./config/db');
+
 
 // Define Routes
 app.use('/api/auth', require('./routes/authRoutes'));

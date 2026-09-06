@@ -1,49 +1,29 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './auth.html',
-  styleUrls: ['./auth.scss']
+  styleUrls: ['./auth.scss'] 
 })
 export class AuthComponent {
-  isLoginMode: boolean = true;
-  authForm: FormGroup;
+  email = '';
+  password = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
-    this.initForm();
-  }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  initForm(): void {
-    this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      fullName: [''] // Only required for signup
+  login(): void {
+    this.authService.login({ email: this.email, password: this.password }).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err: any) => console.error('Authentication failed', err)
     });
-  }
-
-  toggleMode(mode: boolean): void {
-    this.isLoginMode = mode;
-    this.authForm.reset();
-  }
-
-  onSubmit(): void {
-    if (this.authForm.invalid) return;
-
-    if (this.isLoginMode) {
-      this.authService.login(this.authForm.value).subscribe({
-        next: (res) => console.log('Login successful', res),
-        error: (err) => console.error('Login failed', err)
-      });
-    } else {
-      this.authService.signup(this.authForm.value).subscribe({
-        next: (res) => console.log('Signup successful', res),
-        error: (err) => console.error('Signup failed', err)
-      });
-    }
   }
 }

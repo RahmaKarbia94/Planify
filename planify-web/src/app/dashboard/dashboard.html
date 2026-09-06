@@ -1,0 +1,21 @@
+<div class="dashboard-wrapper">
+  <header class="glass-header">
+    <h2>My Projects</h2>
+    <button class="glass-btn primary">Create Project</button>
+  </header>
+
+  <main class="projects-grid">
+    <div class="glass-card effect-3d" *ngFor="let project of projects">
+      <h3>{{ project.title || 'Untitled Project' }}</h3>
+      <p>{{ project.description || 'No description provided.' }}</p>
+      <div class="card-actions">
+        <button class="glass-btn small">View Tasks</button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state glass-card" *ngIf="projects.length === 0">
+      <p>No projects found. Create one to get started.</p>
+    </div>
+  </main>
+</div>

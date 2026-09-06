@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-help-center',
+  selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './help-center.html',
-  styleUrls: ['./help-center.scss']
+  templateUrl: './navbar.html',
+  styleUrls: ['./navbar.scss']
 })
-export class HelpCenterComponent {}
+export class NavbarComponent {}

@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-help-center',
+  selector: 'app-tasks',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './help-center.html',
-  styleUrls: ['./help-center.scss']
+  templateUrl: './tasks.html',
+  styleUrls: ['./tasks.scss']
 })
-export class HelpCenterComponent {}
+export class TasksComponent {}

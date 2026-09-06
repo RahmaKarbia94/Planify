@@ -1,38 +1,24 @@
 <div class="auth-wrapper">
-  <div class="glass-panel">
-    <div class="toggle-container">
-      <button [class.active]="isLoginMode" (click)="toggleMode(true)">Login</button>
-      <button [class.active]="!isLoginMode" (click)="toggleMode(false)">Sign Up</button>
+  <div class="glass-card effect-3d">
+    <div class="tabs">
+      <button class="tab-btn active">Login</button>
+      <button class="tab-btn">Sign Up</button>
     </div>
-
-    <form *ngIf="isLoginMode" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-      <h2>Welcome Back</h2>
+    
+    <h2>Welcome Back</h2>
+    
+    <form class="auth-form" (ngSubmit)="login()">
       <div class="input-group">
-        <i class="fa-solid fa-envelope"></i>
-        <input type="email" formControlName="email" placeholder="Email" required>
+        <span class="icon">✉</span>
+        <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required>
       </div>
+      
       <div class="input-group">
-        <i class="fa-solid fa-lock"></i>
-        <input type="password" formControlName="password" placeholder="Password" required>
+        <span class="icon">🔒</span>
+        <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required>
       </div>
-      <button type="submit" class="submit-btn" [disabled]="authForm.invalid">Login</button>
-    </form>
-
-    <form *ngIf="!isLoginMode" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-      <h2>Create Account</h2>
-      <div class="input-group">
-        <i class="fa-solid fa-user"></i>
-        <input type="text" formControlName="fullName" placeholder="Full Name" required>
-      </div>
-      <div class="input-group">
-        <i class="fa-solid fa-envelope"></i>
-        <input type="email" formControlName="email" placeholder="Email" required>
-      </div>
-      <div class="input-group">
-        <i class="fa-solid fa-lock"></i>
-        <input type="password" formControlName="password" placeholder="Password" required>
-      </div>
-      <button type="submit" class="submit-btn" [disabled]="authForm.invalid">Sign Up</button>
+      
+      <button type="submit" class="glass-btn primary">Login</button>
     </form>
   </div>
 </div>
