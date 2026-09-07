@@ -2,6 +2,7 @@
   <div class="header-actions">
     <h2>My Projects</h2>
     <div style="display: flex; gap: 1rem;">
+      <button class="glass-btn" (click)="themeService.toggleTheme()">Toggle Theme</button>
       <button class="glass-btn primary" (click)="openModal()">Create Project</button>
       <button class="glass-btn" (click)="logout()">Logout</button>
     </div>

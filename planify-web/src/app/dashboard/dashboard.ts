@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProjectService } from '../services/project';
+import { ThemeService } from '../services/theme';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,11 @@ export class DashboardComponent implements OnInit {
   editingProject: any = null;
   projectForm = { name: '', description: '' };
 
-  constructor(private projectService: ProjectService, private router: Router) {}
+  constructor(
+    private projectService: ProjectService,
+    private router: Router,
+    public themeService: ThemeService
+  ) {}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -28,14 +33,14 @@ export class DashboardComponent implements OnInit {
   loadProjects(): void {
     this.projectService.getProjects().subscribe({
       next: (data: any) => this.projects = data,
-      error: (err: any) => console.error('Error loading projects', err)
+      error: (err: any) => console.error(err)
     });
   }
 
   loadAnalytics(): void {
     this.projectService.getAnalytics().subscribe({
       next: (data: any) => this.analytics = data,
-      error: (err: any) => console.error('Error loading analytics', err)
+      error: (err: any) => console.error(err)
     });
   }
 
@@ -66,7 +71,7 @@ export class DashboardComponent implements OnInit {
           this.loadAnalytics();
           this.closeModal();
         },
-        error: (err: any) => console.error('Error updating project', err)
+        error: (err: any) => console.error(err)
       });
     } else {
       this.projectService.createProject(this.projectForm).subscribe({
@@ -75,7 +80,7 @@ export class DashboardComponent implements OnInit {
           this.loadAnalytics();
           this.closeModal();
         },
-        error: (err: any) => console.error('Error creating project', err)
+        error: (err: any) => console.error(err)
       });
     }
   }
