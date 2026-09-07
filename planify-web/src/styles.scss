@@ -1,34 +1,55 @@
-:root {
-  /* Primary Brand Colors */
-  --color-purple-primary: #8b5cf6;
-  --color-purple-light: #a78bfa;
-  --color-orange-accent: #f97316;
-  --color-orange-gradient: linear-gradient(135deg, #f97316, #fb923c);
+/* Layout Structures */
+.dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 450px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-main);
+  box-sizing: border-box;
+  font-family: inherit;
   
-  /* Light Theme */
-  --bg-app-light: #f4f0ff;
-  --bg-card-light: rgba(255, 255, 255, 0.7);
-  --text-main-light: #1e1b4b;
-  --text-muted-light: #6b7280;
-
-  /* Dark Theme */
-  --bg-app-dark: #1e1e2d;
-  --bg-card-dark: rgba(39, 39, 63, 0.8);
-  --bg-sidebar-dark: #27273f;
-  --text-main-dark: #f8fafc;
-  --text-muted-dark: #94a3b8;
+  &:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+  }
 }
 
-/* Example integration with your existing glassmorphism buttons */
-.glass-btn.primary {
-  background: var(--color-purple-primary);
-  color: white;
-  border-color: var(--color-purple-light);
-}
-
-/* Example integration for the orange 'Semaine' active pill/button */
-.glass-btn.accent {
-  background: var(--color-orange-gradient);
-  color: white;
-  border: none;
+.text-muted {
+  color: var(--text-muted);
 }

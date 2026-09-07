@@ -14,8 +14,7 @@ export class ProjectService {
     const token = localStorage.getItem('token');
     return {
       headers: new HttpHeaders({
-        'x-auth-token': token || '', 
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       })
     };
   }
@@ -24,9 +23,10 @@ export class ProjectService {
     return this.http.get(this.apiUrl, this.getHeaders());
   }
 
-  createProject(project: { name: string; description: string }): Observable<any> {
+  createProject(project: any): Observable<any> {
     return this.http.post(this.apiUrl, project, this.getHeaders());
   }
+
   deleteProject(projectId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${projectId}`, this.getHeaders());
   }

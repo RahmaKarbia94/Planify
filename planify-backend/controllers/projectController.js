@@ -6,18 +6,19 @@ exports.createProject = async (req, res) => {
     const newProject = new Project({
       name,
       description,
-      user: req.user.id
+      owner: req.user.id
     });
     const project = await newProject.save();
     res.status(201).json(project);
   } catch (err) {
+    console.error('POST Project Error:', err);
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ user: req.user.id });
+    const projects = await Project.find({ owner: req.user.id });
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: err.message });

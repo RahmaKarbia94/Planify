@@ -13,7 +13,7 @@ import { ProjectService } from '../services/project';
 })
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
-  showModal = false;
+  isModalOpen = false;
   newProject = { name: '', description: '' };
 
   constructor(private projectService: ProjectService, private router: Router) {}
@@ -30,18 +30,18 @@ export class DashboardComponent implements OnInit {
   }
 
   openModal(): void {
-    this.showModal = true;
+    this.isModalOpen = true;
   }
 
   closeModal(): void {
-    this.showModal = false;
+    this.isModalOpen = false;
     this.newProject = { name: '', description: '' };
   }
 
   createProject(): void {
     this.projectService.createProject(this.newProject).subscribe({
-      next: (res: any) => {
-        this.projects.push(res);
+      next: (project: any) => {
+        this.projects.push(project);
         this.closeModal();
       },
       error: (err: any) => console.error('Error creating project', err)
@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
   viewProject(projectId: string): void {
     this.router.navigate(['/tasks'], { queryParams: { projectId } });
   }
+
   deleteProject(projectId: string, event: Event): void {
     event.stopPropagation();
     this.projectService.deleteProject(projectId).subscribe({
@@ -58,6 +59,7 @@ export class DashboardComponent implements OnInit {
       error: (err: any) => console.error(err)
     });
   }
+
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/auth']);
