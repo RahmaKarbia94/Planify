@@ -12,24 +12,25 @@ import { TaskService } from '../services/task';
   styleUrls: ['./tasks.scss']
 })
 export class TasksComponent implements OnInit {
-  projectId: string = '';
   tasks: any[] = [];
-  showModal = false;
-  newTask = { title: '', description: '', status: 'To Do' };
+  projectId: string = '';
+  isModalOpen = false;
+  taskForm = { title: '', description: '', status: 'To Do', project: '' };
 
   constructor(
+    private taskService: TaskService,
     private route: ActivatedRoute,
-    private router: Router,
-    private taskService: TaskService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.projectId = params['projectId'];
+      this.taskForm.project = this.projectId;
       if (this.projectId) {
         this.loadTasks();
       } else {
-        this.router.navigate(['/dashboard']);
+        this.goBack();
       }
     });
   }
@@ -42,39 +43,40 @@ export class TasksComponent implements OnInit {
   }
 
   openModal(): void {
-    this.showModal = true;
+    this.isModalOpen = true;
   }
 
   closeModal(): void {
-    this.showModal = false;
-    this.newTask = { title: '', description: '', status: 'To Do' };
+    this.isModalOpen = false;
+    this.taskForm = { title: '', description: '', status: 'To Do', project: this.projectId };
   }
 
   createTask(): void {
-    this.taskService.createTask(this.projectId, this.newTask).subscribe({
-      next: (res: any) => {
-        this.tasks.push(res);
+    this.taskService.createTask(this.taskForm).subscribe({
+      next: (task: any) => {
+        this.tasks.push(task);
         this.closeModal();
       },
       error: (err: any) => console.error('Error creating task', err)
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
-  updateStatus(task: any, newStatus: string): void {
-    this.taskService.updateTask(task._id, { status: newStatus }).subscribe({
-      next: (updated) => task.status = updated.status,
-      error: (err) => console.error(err)
+  updateStatus(task: any, event: any): void {
+    const newStatus = event.target.value;
+    this.taskService.updateTaskStatus(task._id, newStatus).subscribe({
+      next: (updated: any) => task.status = updated.status,
+      error: (err: any) => console.error('Error updating status', err)
     });
   }
 
-  deleteTask(taskId: string, event: Event): void {
-    event.stopPropagation();
+  deleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe({
       next: () => this.tasks = this.tasks.filter(t => t._id !== taskId),
-      error: (err) => console.error(err)
+      error: (err: any) => console.error(err)
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }
