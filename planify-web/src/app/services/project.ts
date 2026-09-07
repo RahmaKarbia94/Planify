@@ -19,6 +19,10 @@ export class ProjectService {
     };
   }
 
+  getAnalytics(): Observable<any> {
+    return this.http.get('http://localhost:3000/api/projects/analytics', this.getHeaders());
+  }
+
   getProjects(): Observable<any> {
     return this.http.get(this.apiUrl, this.getHeaders());
   }

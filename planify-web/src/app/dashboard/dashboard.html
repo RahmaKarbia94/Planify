@@ -7,6 +7,21 @@
     </div>
   </div>
 
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="glass-card" style="text-align: center;">
+      <h3 style="margin: 0; font-size: 2rem; color: var(--accent-purple);">{{ analytics.totalProjects }}</h3>
+      <p class="text-muted" style="margin: 0.5rem 0 0 0;">Total Projects</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+      <h3 style="margin: 0; font-size: 2rem; color: var(--accent-pink);">{{ analytics.activeTasks }}</h3>
+      <p class="text-muted" style="margin: 0.5rem 0 0 0;">Active Tasks</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+      <h3 style="margin: 0; font-size: 2rem; color: #3b82f6;">{{ analytics.completionRate }}%</h3>
+      <p class="text-muted" style="margin: 0.5rem 0 0 0;">Completion Rate</p>
+    </div>
+  </div>
+
   <div *ngIf="projects.length === 0" class="glass-card" style="text-align: center; margin-top: 2rem;">
     <p class="text-muted">No projects found. Create one to get started.</p>
   </div>

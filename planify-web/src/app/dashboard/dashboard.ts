@@ -13,6 +13,7 @@ import { ProjectService } from '../services/project';
 })
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
+  analytics = { totalProjects: 0, activeTasks: 0, completionRate: 0 };
   isModalOpen = false;
   editingProject: any = null;
   projectForm = { name: '', description: '' };
@@ -21,12 +22,20 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProjects();
+    this.loadAnalytics();
   }
 
   loadProjects(): void {
     this.projectService.getProjects().subscribe({
       next: (data: any) => this.projects = data,
       error: (err: any) => console.error('Error loading projects', err)
+    });
+  }
+
+  loadAnalytics(): void {
+    this.projectService.getAnalytics().subscribe({
+      next: (data: any) => this.analytics = data,
+      error: (err: any) => console.error('Error loading analytics', err)
     });
   }
 
@@ -54,6 +63,7 @@ export class DashboardComponent implements OnInit {
         next: (updated: any) => {
           const index = this.projects.findIndex(p => p._id === updated._id);
           if (index !== -1) this.projects[index] = updated;
+          this.loadAnalytics();
           this.closeModal();
         },
         error: (err: any) => console.error('Error updating project', err)
@@ -62,6 +72,7 @@ export class DashboardComponent implements OnInit {
       this.projectService.createProject(this.projectForm).subscribe({
         next: (project: any) => {
           this.projects.push(project);
+          this.loadAnalytics();
           this.closeModal();
         },
         error: (err: any) => console.error('Error creating project', err)
@@ -76,7 +87,10 @@ export class DashboardComponent implements OnInit {
   deleteProject(projectId: string, event: Event): void {
     event.stopPropagation();
     this.projectService.deleteProject(projectId).subscribe({
-      next: () => this.projects = this.projects.filter(p => p._id !== projectId),
+      next: () => {
+        this.projects = this.projects.filter(p => p._id !== projectId);
+        this.loadAnalytics();
+      },
       error: (err: any) => console.error(err)
     });
   }

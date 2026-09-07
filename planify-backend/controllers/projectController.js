@@ -42,3 +42,20 @@ exports.deleteProject = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.getAnalytics = async (req, res) => {
+  try {
+    const Task = require('../models/Task');
+    const projects = await require('../models/Project').find({ owner: req.user.id });
+    const projectIds = projects.map(p => p._id);
+    const tasks = await Task.find({ project: { $in: projectIds } });
+
+    const totalProjects = projects.length;
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.status === 'Done').length;
+    const completionRate = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+    res.json({ totalProjects, activeTasks: totalTasks - completedTasks, completionRate });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
