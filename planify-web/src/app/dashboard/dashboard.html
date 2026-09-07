@@ -13,8 +13,11 @@
 
   <div class="projects-grid">
     <div class="glass-card" *ngFor="let project of projects" (click)="viewProject(project._id)" style="cursor: pointer; position: relative;">
-      <button class="glass-btn" style="position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-color: #ef4444; color: #ef4444; z-index: 10;" (click)="deleteProject(project._id, $event)">X</button>
-      <h3 style="margin-top: 0;">{{ project.name }}</h3>
+      <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 0.5rem; z-index: 10;">
+        <button class="glass-btn" style="padding: 4px 10px; border-color: var(--accent-purple); color: var(--accent-purple);" (click)="openModal(project, $event)">✎</button>
+        <button class="glass-btn" style="padding: 4px 10px; border-color: #ef4444; color: #ef4444;" (click)="deleteProject(project._id, $event)">X</button>
+      </div>
+      <h3 style="margin-top: 0; padding-right: 4rem;">{{ project.name }}</h3>
       <p class="text-muted">{{ project.description }}</p>
     </div>
   </div>
@@ -23,13 +26,13 @@
 <!-- Modal Overlay -->
 <div class="modal-overlay" *ngIf="isModalOpen">
   <div class="glass-card modal-content">
-    <h3 style="margin-top: 0;">New Project</h3>
+    <h3 style="margin-top: 0;">{{ editingProject ? 'Edit Project' : 'New Project' }}</h3>
     <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
-      <input type="text" [(ngModel)]="newProject.name" placeholder="Project Name" class="form-input">
-      <input type="text" [(ngModel)]="newProject.description" placeholder="Description" class="form-input">
+      <input type="text" [(ngModel)]="projectForm.name" placeholder="Project Name" class="form-input">
+      <input type="text" [(ngModel)]="projectForm.description" placeholder="Description" class="form-input">
       <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
         <button class="glass-btn" (click)="closeModal()">Cancel</button>
-        <button class="glass-btn primary" (click)="createProject()">Create</button>
+        <button class="glass-btn primary" (click)="saveProject()">Save</button>
       </div>
     </div>
   </div>

@@ -14,7 +14,8 @@ import { ProjectService } from '../services/project';
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
   isModalOpen = false;
-  newProject = { name: '', description: '' };
+  editingProject: any = null;
+  projectForm = { name: '', description: '' };
 
   constructor(private projectService: ProjectService, private router: Router) {}
 
@@ -29,23 +30,43 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openModal(): void {
+  openModal(project: any = null, event: Event | null = null): void {
+    if (event) event.stopPropagation();
     this.isModalOpen = true;
+    if (project) {
+      this.editingProject = project;
+      this.projectForm = { name: project.name, description: project.description };
+    } else {
+      this.editingProject = null;
+      this.projectForm = { name: '', description: '' };
+    }
   }
 
   closeModal(): void {
     this.isModalOpen = false;
-    this.newProject = { name: '', description: '' };
+    this.editingProject = null;
+    this.projectForm = { name: '', description: '' };
   }
 
-  createProject(): void {
-    this.projectService.createProject(this.newProject).subscribe({
-      next: (project: any) => {
-        this.projects.push(project);
-        this.closeModal();
-      },
-      error: (err: any) => console.error('Error creating project', err)
-    });
+  saveProject(): void {
+    if (this.editingProject) {
+      this.projectService.updateProject(this.editingProject._id, this.projectForm).subscribe({
+        next: (updated: any) => {
+          const index = this.projects.findIndex(p => p._id === updated._id);
+          if (index !== -1) this.projects[index] = updated;
+          this.closeModal();
+        },
+        error: (err: any) => console.error('Error updating project', err)
+      });
+    } else {
+      this.projectService.createProject(this.projectForm).subscribe({
+        next: (project: any) => {
+          this.projects.push(project);
+          this.closeModal();
+        },
+        error: (err: any) => console.error('Error creating project', err)
+      });
+    }
   }
 
   viewProject(projectId: string): void {
