@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,19 +10,28 @@ export class TaskService {
 
   constructor(private http: HttpClient) {}
 
-  getTasksByProject(projectId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/project/${projectId}`);
+  private getHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      headers: new HttpHeaders({
+        'x-auth-token': token || '', 
+        'Authorization': `Bearer ${token}` 
+      })
+    };
   }
 
-  createTask(taskData: any): Observable<any> {
-    return this.http.post(this.apiUrl, taskData);
+  getTasks(projectId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${projectId}`, this.getHeaders());
   }
 
-  updateTaskStatus(taskId: string, status: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${taskId}`, { status });
+  createTask(projectId: string, task: { title: string; description: string; status: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${projectId}`, task, this.getHeaders());
+  }
+  updateTask(taskId: string, updates: any): Observable<any> {
+    return this.http.put(`http://localhost:3000/api/tasks/${taskId}`, updates, this.getHeaders());
   }
 
   deleteTask(taskId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${taskId}`);
+    return this.http.delete(`http://localhost:3000/api/tasks/${taskId}`, this.getHeaders());
   }
 }

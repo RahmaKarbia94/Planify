@@ -12,18 +12,30 @@ import { AuthService } from './auth.service';
   styleUrls: ['./auth.scss'] 
 })
 export class AuthComponent {
+  isLogin = true;
+  fullName = '';
   email = '';
   password = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login(): void {
-    this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: (res: any) => {
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err: any) => console.error('Authentication failed', err)
-    });
+  onSubmit(): void {
+    if (this.isLogin) {
+      this.authService.login({ email: this.email, password: this.password }).subscribe({
+        next: (res: any) => {
+          localStorage.setItem('token', res.token);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err: any) => console.error('Authentication failed', err)
+      });
+    } else {
+      this.authService.register({ fullName: this.fullName, email: this.email, password: this.password }).subscribe({
+        next: (res: any) => {
+          localStorage.setItem('token', res.token);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err: any) => console.error('Registration failed', err)
+      });
+    }
   }
 }

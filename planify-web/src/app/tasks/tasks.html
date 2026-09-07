@@ -1,1 +1,56 @@
-<p>tasks works!</p>
+<div class="dashboard-header">
+  <button class="glass-btn" (click)="goBack()" style="margin-right: 15px;">← Back</button>
+  <h2>Project Tasks</h2>
+  <button class="glass-btn primary" (click)="openModal()" style="margin-left: auto;">Add Task</button>
+</div>
+
+<div class="projects-grid" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+  <!-- Render each task -->
+  <div class="glass-card effect-3d" *ngFor="let task of tasks" style="min-width: 250px;">
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.description }}</p>
+    <span style="display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.2); border-radius: 12px; font-size: 0.85em; margin-top: 10px;">
+      {{ task.status }}
+    </span>
+  </div>
+
+  <!-- Empty state -->
+  <div class="glass-card effect-3d" *ngIf="tasks.length === 0" style="width: 100%; text-align: center;">
+    <p>No tasks found. Create one to get started.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="glass-card effect-3d modal-content">
+    <h3>New Task</h3>
+    <form (ngSubmit)="createTask()">
+      <div class="input-group">
+        <input type="text" name="title" [(ngModel)]="newTask.title" placeholder="Task Title" required>
+      </div>
+      <div class="input-group">
+        <input type="text" name="description" [(ngModel)]="newTask.description" placeholder="Description">
+      </div>
+      <div class="input-group" style="margin-bottom: 20px;">
+        <select name="status" [(ngModel)]="newTask.status" required style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #333; outline: none;">
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="glass-btn" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="glass-btn primary">Create</button>
+      </div>
+      <div class="glass-card effect-3d" *ngFor="let task of tasks" style="min-width: 250px; position: relative;">
+    <button class="glass-btn" style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; color: #f87171;" (click)="deleteTask(task._id, $event)">X</button>
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.description }}</p>
+    <select [ngModel]="task.status" (ngModelChange)="updateStatus(task, $event)" style="margin-top: 10px; padding: 5px; background: rgba(255,255,255,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.4); outline: none;">
+      <option value="To Do">To Do</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Done">Done</option>
+    </select>
+  </div>
+    </form>
+  </div>
+</div>

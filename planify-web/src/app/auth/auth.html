@@ -1,13 +1,18 @@
 <div class="auth-wrapper">
   <div class="glass-card effect-3d">
     <div class="tabs">
-      <button class="tab-btn active">Login</button>
-      <button class="tab-btn">Sign Up</button>
+      <button class="tab-btn" [class.active]="isLogin" (click)="isLogin = true">Login</button>
+      <button class="tab-btn" [class.active]="!isLogin" (click)="isLogin = false">Sign Up</button>
     </div>
     
-    <h2>Welcome Back</h2>
+    <h2>{{ isLogin ? 'Welcome Back' : 'Create Account' }}</h2>
     
-    <form class="auth-form" (ngSubmit)="login()">
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <div class="input-group" *ngIf="!isLogin">
+        <span class="icon">👤</span>
+        <input type="text" name="fullName" [(ngModel)]="fullName" placeholder="Full Name" [required]="!isLogin">
+      </div>
+
       <div class="input-group">
         <span class="icon">✉</span>
         <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required>
@@ -18,7 +23,7 @@
         <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required>
       </div>
       
-      <button type="submit" class="glass-btn primary">Login</button>
+      <button type="submit" class="glass-btn primary">{{ isLogin ? 'Login' : 'Sign Up' }}</button>
     </form>
   </div>
 </div>

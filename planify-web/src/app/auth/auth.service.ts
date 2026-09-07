@@ -13,7 +13,9 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
-
+register(credentials: { fullName: string; email: string; password: string }) {
+  return this.http.post('http://localhost:3000/api/auth/register', credentials);
+}
   getToken(): string | null {
     return localStorage.getItem('token');
   }
