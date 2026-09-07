@@ -16,6 +16,8 @@ export class TasksComponent implements OnInit {
   projectId: string = '';
   isModalOpen = false;
   taskForm = { title: '', description: '', status: 'To Do', project: '' };
+  searchTerm: string = '';
+  statusFilter: string = 'All';
 
   constructor(
     private taskService: TaskService,
@@ -27,24 +29,28 @@ export class TasksComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.projectId = params['projectId'];
       this.taskForm.project = this.projectId;
-      if (this.projectId) {
-        this.loadTasks();
-      } else {
-        this.goBack();
-      }
+      if (this.projectId) this.loadTasks();
+      else this.goBack();
     });
   }
 
   loadTasks(): void {
     this.taskService.getTasks(this.projectId).subscribe({
       next: (data: any) => this.tasks = data,
-      error: (err: any) => console.error('Error loading tasks', err)
+      error: (err: any) => console.error(err)
     });
   }
 
-  openModal(): void {
-    this.isModalOpen = true;
+  get filteredTasks(): any[] {
+    return this.tasks.filter(t => {
+      const matchSearch = t.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
+                          t.description.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchStatus = this.statusFilter === 'All' || t.status === this.statusFilter;
+      return matchSearch && matchStatus;
+    });
   }
+
+  openModal(): void { this.isModalOpen = true; }
 
   closeModal(): void {
     this.isModalOpen = false;
@@ -57,7 +63,7 @@ export class TasksComponent implements OnInit {
         this.tasks.push(task);
         this.closeModal();
       },
-      error: (err: any) => console.error('Error creating task', err)
+      error: (err: any) => console.error(err)
     });
   }
 
@@ -65,7 +71,7 @@ export class TasksComponent implements OnInit {
     const newStatus = event.target.value;
     this.taskService.updateTaskStatus(task._id, newStatus).subscribe({
       next: (updated: any) => task.status = updated.status,
-      error: (err: any) => console.error('Error updating status', err)
+      error: (err: any) => console.error(err)
     });
   }
 
@@ -76,7 +82,5 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
+  goBack(): void { this.router.navigate(['/dashboard']); }
 }
