@@ -1,29 +1,99 @@
 <div class="auth-wrapper">
-  <div class="glass-card effect-3d">
-    <div class="tabs">
-      <button class="tab-btn" [class.active]="isLogin" (click)="isLogin = true">Login</button>
-      <button class="tab-btn" [class.active]="!isLogin" (click)="isLogin = false">Sign Up</button>
+  <!-- Sun/Moon Theme Toggle -->
+  <button class="theme-toggle" (click)="themeService.toggleTheme()">
+    {{ themeService.isDark ? '☀️' : '🌙' }}
+  </button>
+
+  <div class="auth-card">
+    <div class="logo-container">
+      <svg width="65" height="65" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="rotate(-15 50 50)">
+          <rect x="20" y="30" width="28" height="50" rx="10" fill="var(--color-blue)" />
+          <rect x="55" y="20" width="28" height="35" rx="10" fill="var(--color-purple)" />
+          <rect x="55" y="62" width="28" height="28" rx="10" fill="var(--color-pink-dark)" />
+        </g>
+      </svg>
     </div>
-    
-    <h2>{{ isLogin ? 'Welcome Back' : 'Create Account' }}</h2>
-    
-    <form class="auth-form" (ngSubmit)="onSubmit()">
-      <div class="input-group" *ngIf="!isLogin">
-        <span class="icon">👤</span>
-        <input type="text" name="fullName" [(ngModel)]="fullName" placeholder="Full Name" [required]="!isLogin">
+
+    <!-- MAIN LOGIN / SIGNUP FORM -->
+    <ng-container *ngIf="!isOtpStep">
+      <h2 class="auth-title">Planify</h2>
+      <p class="auth-subtitle">
+        {{ isLogin ? 'Welcome back to your workspace' : 'Start managing your projects' }}
+      </p>
+
+      <div class="form-group" *ngIf="!isLogin">
+        <input type="text" [(ngModel)]="authForm.username" placeholder="Username" class="auth-input">
       </div>
 
-      <div class="input-group">
-        <span class="icon">✉</span>
-        <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required>
+      <div class="form-group">
+        <input type="email" [(ngModel)]="authForm.email" placeholder="Email Address" class="auth-input">
       </div>
-      
-      <div class="input-group">
-        <span class="icon">🔒</span>
-        <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="authForm.password" placeholder="Password" class="auth-input">
+          <button class="eye-btn" (click)="togglePassword()">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
       </div>
-      
-      <button type="submit" class="glass-btn primary">{{ isLogin ? 'Login' : 'Sign Up' }}</button>
-    </form>
+
+      <div class="form-group" *ngIf="!isLogin">
+        <div class="input-wrapper">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" 
+                 [(ngModel)]="authForm.confirmPassword" 
+                 placeholder="Confirm Password" 
+                 class="auth-input"
+                 [ngClass]="{'error': !passwordsMatch() && authForm.confirmPassword}">
+          <button class="eye-btn" (click)="toggleConfirmPassword()">
+            {{ showConfirmPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <span class="error-text" *ngIf="!passwordsMatch() && authForm.confirmPassword">
+          Passwords do not match
+        </span>
+      </div>
+
+      <button class="auth-btn" (click)="onSubmit()" [disabled]="!isLogin && !passwordsMatch()">
+        {{ isLogin ? 'Sign In' : 'Sign Up' }}
+      </button>
+
+      <div class="auth-footer">
+        {{ isLogin ? "Don't have an account?" : "Already have an account?" }} 
+        <a href="javascript:void(0)" (click)="toggleMode()">
+          {{ isLogin ? 'Sign Up' : 'Log In' }}
+        </a>
+      </div>
+    </ng-container>
+
+    <!-- OTP VERIFICATION SCREEN -->
+    <ng-container *ngIf="isOtpStep">
+      <h2 class="auth-title">Verify Email</h2>
+      <p class="auth-subtitle" style="margin-bottom: 1rem;">
+        We sent a 6-digit code to <strong>{{ authForm.email }}</strong>.
+      </p>
+
+      <div class="otp-container">
+        <input *ngFor="let digit of otpDigits; let i = index"
+               type="text"
+               maxlength="1"
+               [id]="'otp-' + i"
+               [(ngModel)]="otpDigits[i]"
+               (keyup)="onOtpInput($event, i)"
+               class="otp-input"
+               autocomplete="off">
+      </div>
+
+      <button class="auth-btn" (click)="verifyOtp()">
+        Verify Account
+      </button>
+
+      <div class="auth-footer">
+        Didn't receive the code? 
+        <a href="javascript:void(0)" (click)="onSubmit()">Resend</a>
+      </div>
+    </ng-container>
+
   </div>
 </div>

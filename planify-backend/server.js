@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const app = express();
 
@@ -10,6 +11,15 @@ app.use(cors({
 app.use(express.json());
 
 connectDB();
+
+mongoose.connection.once('open', async () => {
+  try {
+    await mongoose.connection.db.collection('users').dropIndex('name_1');
+    console.log('Successfully dropped old name_1 index.');
+  } catch (err) {
+    // Ignore error if the index has already been dropped
+  }
+});
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
